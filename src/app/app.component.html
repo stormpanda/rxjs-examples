@@ -1,0 +1,22 @@
+<h1>RxJS Examples</h1>
+
+<div class="content">
+  <h2>Sources</h2>
+  <div class="buttons">
+    <button (click)="subscribe(sourceA$)" class="button">Source A</button>
+    <button (click)="subscribe(sourceB$)" class="button">Source B</button>
+    <button (click)="subscribe(sourceC$)" class="button">Source C</button>
+  </div>
+
+  <h2>Operators</h2>
+  <div class="buttons">
+    <button (click)="subscribe(combineLatest$)" class="button">combineLatest</button>
+    <button (click)="subscribe(forkJoin$)" class="button">forkJoin</button>
+  </div>
+  
+  <div class="console-wrapper">
+    <app-fake-console *ngIf="logs$ | async as logs" [logs]="logs"></app-fake-console>
+    <button class="button button-inverted stop-button" (click)="completeSources()">complete sources</button>
+  </div>
+</div>
+
