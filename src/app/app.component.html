@@ -17,7 +17,10 @@
   
   <div class="console-wrapper">
     <app-fake-console *ngIf="logs$ | async as logs" [logs]="logs"></app-fake-console>
-    <button class="button button-inverted stop-button" (click)="completeSources()">complete sources</button>
+    <div class="stop-buttons">
+      <button class="button button-inverted" (click)="completeSources()">complete sources</button>
+      <button class="button button-inverted" (click)="completeSubscription()">complete subscription</button>
+    </div>
   </div>
 </div>
 

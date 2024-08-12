@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BehaviorSubject, combineLatest, forkJoin, interval, map, Observable, Subject, Subscription, take, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, interval, map, Observable, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { FakeConsoleComponent } from './components/fake-console/fake-console.component';
 
@@ -14,7 +14,8 @@ import { FakeConsoleComponent } from './components/fake-console/fake-console.com
 export class AppComponent {
   title = 'rxjs-examples';
 
-  private completeSubject = new Subject<void>()
+  private completeSourcesSubject = new Subject<void>();
+  private completeSubscriptionSubject = new Subject<void>();
   private logsSubject = new BehaviorSubject<string[]>([]);
   logs$ = this.logsSubject.asObservable();
 
@@ -26,30 +27,36 @@ export class AppComponent {
     sourceA$: interval(1200).pipe(
       map(value => `A: ${value}`), 
       this.tapLogSource(),
-      takeUntil(this.completeSubject)
+      takeUntil(this.completeSourcesSubject)
     ),
   
     sourceB$: interval(2200).pipe(
       map(value => `B: ${value}`), 
       this.tapLogSource(),
-      takeUntil(this.completeSubject)
+      takeUntil(this.completeSourcesSubject)
     ),
   
     sourceC$: interval(3200).pipe(
       map(value => `C: ${value}`), 
       this.tapLogSource(),
-      takeUntil(this.completeSubject)
+      takeUntil(this.completeSourcesSubject)
     )
   } as const
 
   private readonly examples = {
     combineLatest$: combineLatest([this.sources.sourceA$, this.sources.sourceB$, this.sources.sourceC$]).pipe(
-      map(([a, b, c]) => `${a} ${b} ${c}`)
+      map(([a, b, c]) => `${a}, ${b}, ${c}`)
     ),
   
     forkJoin$: forkJoin([this.sources.sourceA$, this.sources.sourceB$, this.sources.sourceC$]).pipe(
-      map(([a, b, c]) => `${a} ${b} ${c}`)
-    )
+      map(([a, b, c]) => `${a}, ${b}, ${c}`)
+    ),
+
+    switchMap$: this.sources.sourceA$.pipe(
+      switchMap(value => interval(1000).pipe(
+        map(i => `${value}, X: ${i}`),
+      ))
+    ),
   } as const
 
   getSources() {
@@ -67,7 +74,9 @@ export class AppComponent {
     this.log('Subscribing...');
     this.log('---');
 
-    observable.subscribe({
+    observable.pipe(
+      takeUntil(this.completeSubscriptionSubject)
+    ).subscribe({
       next: (value) => {
         this.log(`Subscription: ${value}`);
         this.log('---');
@@ -83,7 +92,11 @@ export class AppComponent {
   }
 
   completeSources() {
-    this.completeSubject.next();
+    this.completeSourcesSubject.next();
+  }
+
+  completeSubscription() {
+    this.completeSubscriptionSubject.next();
   }
 
   log(log: string) {
