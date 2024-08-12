@@ -1,12 +1,13 @@
 import { NgFor } from '@angular/common';
-import { Component, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-fake-console',
   standalone: true,
   imports: [NgFor],
   templateUrl: './fake-console.component.html',
-  styleUrl: './fake-console.component.scss'
+  styleUrl: './fake-console.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FakeConsoleComponent implements OnChanges{
   @Input() logs: string[] = [];

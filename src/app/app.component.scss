@@ -30,10 +30,12 @@
 .buttons {
     display: flex;
     justify-content: flex-start;
+    flex-wrap: wrap;
     margin-top: 20px;
     margin-bottom: 20px;
 
-    button + button {
-        margin-left: 10px;
+    button {
+        margin-right: 10px;
+        margin-bottom: 10px;
     }
 }
