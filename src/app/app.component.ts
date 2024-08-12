@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BehaviorSubject, buffer, bufferTime, combineLatest, concat, concatMap, debounce, debounceTime, distinct, distinctUntilChanged, exhaust, exhaustMap, filter, first, forkJoin, interval, map, mergeMap, Observable, Subject, Subscription, switchMap, take, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, buffer, bufferTime, combineLatest, concat, concatMap, debounce, debounceTime, distinct, distinctUntilChanged, exhaust, exhaustMap, filter, first, forkJoin, interval, map, mergeMap, Observable, Subject, Subscription, switchMap, take, takeLast, takeUntil, takeWhile, tap, timer, withLatestFrom } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { FakeConsoleComponent } from './components/fake-console/fake-console.component';
 
@@ -70,6 +70,17 @@ export class AppComponent {
 
     takeUntil$: this.sources.sourceA$.pipe(
       takeUntil(this.sources.sourceC$),
+      map(emit => emit.message)
+    ),
+
+    takeWhile$: this.sources.sourceA$.pipe(
+      takeWhile(emit => emit.value < 5),
+      map(emit => emit.message)
+    ),
+
+    // use the "complete sources" after a while button to see the full behavior
+    takeLast$: this.sources.sourceA$.pipe(
+      takeLast(3),
       map(emit => emit.message)
     ),
 
