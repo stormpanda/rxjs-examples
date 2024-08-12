@@ -15,12 +15,11 @@
     </button>
   </div>
   
-  <div class="console-wrapper">
-    <app-fake-console *ngIf="logs$ | async as logs" [logs]="logs"></app-fake-console>
-    <div class="stop-buttons">
-      <button class="button button-inverted" (click)="completeSources()">complete sources</button>
-      <button class="button button-inverted" (click)="completeSubscription()">complete subscription</button>
-    </div>
+  <div class="stop-buttons">
+    <button class="button button-inverted" (click)="completeSources()">complete sources</button>
+    <button class="button button-inverted" (click)="completeSubscription()">complete subscription</button>
   </div>
+  
+  <app-fake-console *ngIf="logs$ | async as logs" [logs]="logs"></app-fake-console>
 </div>
 

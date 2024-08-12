@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BehaviorSubject, combineLatest, forkJoin, interval, map, Observable, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, first, forkJoin, interval, map, Observable, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { FakeConsoleComponent } from './components/fake-console/fake-console.component';
 
@@ -44,6 +44,14 @@ export class AppComponent {
   } as const
 
   private readonly examples = {
+    take3$: this.sources.sourceA$.pipe(
+      take(3)
+    ),
+
+    first$: this.sources.sourceC$.pipe(
+      first()
+    ),
+
     combineLatest$: combineLatest([this.sources.sourceA$, this.sources.sourceB$, this.sources.sourceC$]).pipe(
       map(([a, b, c]) => `${a}, ${b}, ${c}`)
     ),
