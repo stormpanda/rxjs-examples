@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BehaviorSubject, buffer, bufferTime, combineLatest, concat, concatMap, debounce, debounceTime, distinct, distinctUntilChanged, exhaust, exhaustMap, filter, first, forkJoin, interval, map, mergeMap, Observable, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
+import { BehaviorSubject, buffer, bufferTime, combineLatest, concat, concatMap, debounce, debounceTime, distinct, distinctUntilChanged, exhaust, exhaustMap, filter, first, forkJoin, interval, map, mergeMap, Observable, Subject, Subscription, switchMap, take, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { FakeConsoleComponent } from './components/fake-console/fake-console.component';
 
@@ -97,6 +97,14 @@ export class AppComponent {
       map(([a, b, c]) => `${a.message}, ${b.message}, ${c.message}`)
     ),
 
+    concat$: concat(
+      this.sources.sourceA$.pipe(take(3)), 
+      this.sources.sourceB$.pipe(take(3)), 
+      this.sources.sourceC$.pipe(take(3))
+    ).pipe(
+      map(emit => emit.message)
+    ),
+
     // use the "complete sources" button to see the full behavior
     switchMap$: this.sources.sourceA$.pipe(
       switchMap(emit => interval(1000).pipe(
@@ -150,6 +158,11 @@ export class AppComponent {
       // play with the time to see the difference
       debounceTime(3000),
       map(emit => emit.message)
+    ),
+
+    withLatestFrom$: this.sources.sourceA$.pipe(
+      withLatestFrom(this.sources.sourceB$, this.sources.sourceC$),
+      map(([a, b, c]) => `${a.message}, ${b.message}, ${c.message}`)
     ),
   } as const
 
