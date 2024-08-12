@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BehaviorSubject, combineLatest, concat, concatMap, distinct, distinctUntilChanged, exhaust, exhaustMap, filter, first, forkJoin, interval, map, mergeMap, Observable, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, buffer, bufferTime, combineLatest, concat, concatMap, debounce, debounceTime, distinct, distinctUntilChanged, exhaust, exhaustMap, filter, first, forkJoin, interval, map, mergeMap, Observable, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { FakeConsoleComponent } from './components/fake-console/fake-console.component';
 
@@ -52,15 +52,18 @@ export class AppComponent {
   private readonly examples = {
     take$: this.sources.sourceA$.pipe(
       map(emit => emit.message),
+      // play with the number to see the difference
       take(3)
     ),
 
-    first$: this.sources.sourceC$.pipe(
+    first$: this.sources.sourceA$.pipe(
+      // you can also give no default or no predicate or skip both
+      first(emit => emit.value === 3, { value: -1, message: 'No value received' }),
       map(emit => emit.message),
-      first()
     ),
 
     filter$: this.sources.sourceA$.pipe(
+      // play with the condition to see the difference
       filter(emit => emit.value % 2 === 0),
       map(emit => emit.message)
     ),
@@ -80,6 +83,7 @@ export class AppComponent {
     ),
 
     distinctUntilChanged$: this.sources.sourceA$.pipe(
+      // play with the condition to see the difference
       map(emit => String(Math.floor(emit.value / 3))),
       distinctUntilChanged(),
     ),
@@ -88,10 +92,12 @@ export class AppComponent {
       map(([a, b, c]) => `${a.message}, ${b.message}, ${c.message}`)
     ),
   
+    // use the "complete sources" button to see an emit
     forkJoin$: forkJoin([this.sources.sourceA$, this.sources.sourceB$, this.sources.sourceC$]).pipe(
       map(([a, b, c]) => `${a.message}, ${b.message}, ${c.message}`)
     ),
 
+    // use the "complete sources" button to see the full behavior
     switchMap$: this.sources.sourceA$.pipe(
       switchMap(emit => interval(1000).pipe(
         map(i => `${emit.message}, X: ${i}`),
@@ -102,10 +108,12 @@ export class AppComponent {
     mergeMap$: this.sources.sourceA$.pipe(
       mergeMap(emit => interval(1000).pipe(
         map(i => `${emit.message}, X: ${i}`),
+        // remove the take to see the mergeMap go out of control
         take(3)
       ))
     ),
 
+    // use the "complete sources" button to see the full behavior
     concatMap$: this.sources.sourceA$.pipe(
       concatMap(emit => interval(1000).pipe(
         map(i => `${emit.message}, X: ${i}`),
@@ -118,6 +126,30 @@ export class AppComponent {
         map(i => `${emit.message}, X: ${i}`),
         take(3)
       ))
+    ),
+
+    buffer$: this.sources.sourceA$.pipe(
+      // play with the time to see the difference
+      buffer(interval(3000)),
+      map(emits => emits.map(emit => emit.message).join(', '))
+    ),
+
+    bufferTime$: this.sources.sourceA$.pipe(
+      // play with the time to see the difference
+      bufferTime(3000),
+      map(emits => emits.map(emit => emit.message).join(', '))
+    ),
+
+    debounce$: this.sources.sourceA$.pipe(
+      // play with the time to see the difference
+      debounce(() => interval(3000)),
+      map(emit => emit.message)
+    ),
+
+    debounceTime$: this.sources.sourceA$.pipe(
+      // play with the time to see the difference
+      debounceTime(3000),
+      map(emit => emit.message)
     ),
   } as const
 
