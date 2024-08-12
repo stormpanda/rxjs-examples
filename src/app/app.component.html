@@ -3,15 +3,16 @@
 <div class="content">
   <h2>Sources</h2>
   <div class="buttons">
-    <button (click)="subscribe(sourceA$)" class="button">Source A</button>
-    <button (click)="subscribe(sourceB$)" class="button">Source B</button>
-    <button (click)="subscribe(sourceC$)" class="button">Source C</button>
+    <button *ngFor="let source of getSources()" (click)="subscribe(source.observable$)" class="button">
+      {{ source.name}}
+    </button>
   </div>
 
   <h2>Operators</h2>
   <div class="buttons">
-    <button (click)="subscribe(combineLatest$)" class="button">combineLatest</button>
-    <button (click)="subscribe(forkJoin$)" class="button">forkJoin</button>
+    <button *ngFor="let example of getExamples()" (click)="subscribe(example.observable$)" class="button">
+      {{ example.name}}
+    </button>
   </div>
   
   <div class="console-wrapper">
