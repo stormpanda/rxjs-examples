@@ -8,9 +8,8 @@ describe('FakeConsoleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FakeConsoleComponent]
-    })
-    .compileComponents();
+      imports: [FakeConsoleComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FakeConsoleComponent);
     component = fixture.componentInstance;

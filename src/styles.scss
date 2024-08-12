@@ -1,51 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
 html {
-    --color-primary: darkcyan;
-    
-    background-color: var(--color-primary);
-    font-family: 'Courier New', Courier, monospace;
+  --color-primary: darkcyan;
+
+  background-color: var(--color-primary);
+  font-family: "Courier New", Courier, monospace;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 button {
-    border: none;
-    margin: 0;
-    padding: 0;
-    width: auto;
-    overflow: visible;
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    line-height: normal;
-    -webkit-font-smoothing: inherit;
-    -moz-osx-font-smoothing: inherit;
-    -webkit-appearance: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  overflow: visible;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  -webkit-appearance: none;
 }
 
 .button {
-    // a button with rounded corners, highlight on hover, and a subtle shadow
-    display: inline-block;
-    padding: 0.5em 1em;
-    margin: 0;
-    text-decoration: none;
-    border-radius: 10px;
-    background-color: black;
-    color: var(--color-primary);
-    font-weight: bold;
-    text-align: center;
-    transition: background-color 0.3s, color 0.3s;
-    box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.2);
+  // a button with rounded corners, highlight on hover, and a subtle shadow
+  display: inline-block;
+  padding: 0.5em 1em;
+  margin: 0;
+  text-decoration: none;
+  border-radius: 10px;
+  background-color: black;
+  color: var(--color-primary);
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s, color 0.3s;
+  box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.2);
 
-    &:hover {
-        opacity: 0.6;
-        cursor: pointer;
-    }
+  &:hover {
+    opacity: 0.6;
+    cursor: pointer;
+  }
 
-    &.button-inverted {
-        background-color: var(--color-primary);
-        color: black;
-    }
+  &.button-inverted {
+    background-color: var(--color-primary);
+    color: black;
+  }
 }

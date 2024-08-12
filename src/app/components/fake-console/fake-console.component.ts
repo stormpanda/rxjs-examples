@@ -1,5 +1,12 @@
 import { NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 
 @Component({
   selector: 'app-fake-console',
@@ -7,9 +14,9 @@ import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, Simpl
   imports: [NgFor],
   templateUrl: './fake-console.component.html',
   styleUrl: './fake-console.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FakeConsoleComponent implements OnChanges{
+export class FakeConsoleComponent implements OnChanges {
   @Input() logs: string[] = [];
 
   constructor(private elementRef: ElementRef) {}
@@ -21,6 +28,7 @@ export class FakeConsoleComponent implements OnChanges{
   }
 
   scrollToBottom() {
-    this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight;
+    this.elementRef.nativeElement.scrollTop =
+      this.elementRef.nativeElement.scrollHeight;
   }
 }

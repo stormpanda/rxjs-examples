@@ -3,23 +3,37 @@
 <div class="content">
   <h2>Sources</h2>
   <div class="buttons">
-    <button *ngFor="let source of getSources()" (click)="subscribe(source.observable$)" class="button">
-      {{ source.name}}
+    <button
+      *ngFor="let source of getSources()"
+      (click)="subscribe(source.observable$)"
+      class="button"
+    >
+      {{ source.name }}
     </button>
   </div>
 
   <h2>Operators</h2>
   <div class="buttons">
-    <button *ngFor="let example of getExamples()" (click)="subscribe(example.observable$)" class="button">
-      {{ example.name}}
+    <button
+      *ngFor="let example of getExamples()"
+      (click)="subscribe(example.observable$)"
+      class="button"
+    >
+      {{ example.name }}
     </button>
   </div>
-  
-  <div class="stop-buttons">
-    <button class="button button-inverted" (click)="completeSources()">complete sources</button>
-    <button class="button button-inverted" (click)="completeSubscription()">complete subscription</button>
-  </div>
-  
-  <app-fake-console *ngIf="logs$ | async as logs" [logs]="logs"></app-fake-console>
-</div>
 
+  <div class="stop-buttons">
+    <button class="button button-inverted" (click)="completeSources()">
+      complete sources
+    </button>
+    <button class="button button-inverted" (click)="completeSubscription()">
+      complete subscription
+    </button>
+  </div>
+
+  <app-fake-console
+    *ngIf="logs$ | async as logs"
+    [logs]="logs"
+  ></app-fake-console>
+</div>
