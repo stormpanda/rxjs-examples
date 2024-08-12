@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BehaviorSubject, combineLatest, concat, concatMap, exhaust, exhaustMap, filter, first, forkJoin, interval, map, mergeMap, Observable, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, concat, concatMap, distinct, distinctUntilChanged, exhaust, exhaustMap, filter, first, forkJoin, interval, map, mergeMap, Observable, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { FakeConsoleComponent } from './components/fake-console/fake-console.component';
 
@@ -50,7 +50,7 @@ export class AppComponent {
   } as const
 
   private readonly examples = {
-    take3$: this.sources.sourceA$.pipe(
+    take$: this.sources.sourceA$.pipe(
       map(emit => emit.message),
       take(3)
     ),
@@ -63,6 +63,25 @@ export class AppComponent {
     filter$: this.sources.sourceA$.pipe(
       filter(emit => emit.value % 2 === 0),
       map(emit => emit.message)
+    ),
+
+    takeUntil$: this.sources.sourceA$.pipe(
+      takeUntil(this.sources.sourceC$),
+      map(emit => emit.message)
+    ),
+
+    map$: this.sources.sourceA$.pipe(
+      map(emit => String(emit.value * 2))
+    ),
+
+    tap$: this.sources.sourceA$.pipe(
+      tap(emit => this.log(`Tap: ${emit.message}`)),
+      map(emit => emit.message)
+    ),
+
+    distinctUntilChanged$: this.sources.sourceA$.pipe(
+      map(emit => String(Math.floor(emit.value / 3))),
+      distinctUntilChanged(),
     ),
 
     combineLatest$: combineLatest([this.sources.sourceA$, this.sources.sourceB$, this.sources.sourceC$]).pipe(
@@ -123,7 +142,7 @@ export class AppComponent {
     ).subscribe({
       next: (value) => {
         const message = typeof value === 'object' ? value.message : value;
-        
+
         this.log(`Subscription: ${message ?? value}`);
         this.log('---');
       },
