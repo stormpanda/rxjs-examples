@@ -18,7 +18,7 @@ import {
   interval,
   map,
   mergeMap,
-  Observable,
+  Observable, race,
   Subject,
   switchMap,
   take,
@@ -26,7 +26,7 @@ import {
   takeUntil,
   takeWhile,
   tap,
-  withLatestFrom,
+  withLatestFrom, zip,
 } from 'rxjs';
 import { FakeConsoleComponent } from './components/fake-console/fake-console.component';
 
@@ -75,7 +75,41 @@ export class AppComponent {
     ),
   } as const;
 
-  private readonly examples = {
+  private readonly creationExamples = {
+    combineLatest$: combineLatest([
+      this.sources.sourceA$,
+      this.sources.sourceB$,
+      this.sources.sourceC$,
+    ]).pipe(map(([a, b, c]) => `${a.message}, ${b.message}, ${c.message}`)),
+
+    // use the "complete sources" button to see an emit
+    forkJoin$: forkJoin([
+      this.sources.sourceA$,
+      this.sources.sourceB$,
+      this.sources.sourceC$,
+    ]).pipe(map(([a, b, c]) => `${a.message}, ${b.message}, ${c.message}`)),
+
+    zip$: zip([
+      this.sources.sourceA$,
+      this.sources.sourceB$,
+      this.sources.sourceC$,
+    ]).pipe(map(([a, b, c]) => `${a.message}, ${b.message}, ${c.message}`)),
+
+    // play with the timing of the source observables to see the difference
+    race$: race([
+      this.sources.sourceA$,
+      this.sources.sourceB$,
+      this.sources.sourceC$,
+    ]).pipe(map((result) => result.message)),
+
+    concat$: concat(
+      this.sources.sourceA$.pipe(take(3)),
+      this.sources.sourceB$.pipe(take(3)),
+      this.sources.sourceC$.pipe(take(3))
+    ).pipe(map((emit) => emit.message)),
+  } as const;
+
+  private readonly pipeableExamples = {
     take$: this.sources.sourceA$.pipe(
       map((emit) => emit.message),
       // play with the number to see the difference
@@ -125,25 +159,6 @@ export class AppComponent {
       map((emit) => String(Math.floor(emit.value / 3))),
       distinctUntilChanged()
     ),
-
-    combineLatest$: combineLatest([
-      this.sources.sourceA$,
-      this.sources.sourceB$,
-      this.sources.sourceC$,
-    ]).pipe(map(([a, b, c]) => `${a.message}, ${b.message}, ${c.message}`)),
-
-    // use the "complete sources" button to see an emit
-    forkJoin$: forkJoin([
-      this.sources.sourceA$,
-      this.sources.sourceB$,
-      this.sources.sourceC$,
-    ]).pipe(map(([a, b, c]) => `${a.message}, ${b.message}, ${c.message}`)),
-
-    concat$: concat(
-      this.sources.sourceA$.pipe(take(3)),
-      this.sources.sourceB$.pipe(take(3)),
-      this.sources.sourceC$.pipe(take(3))
-    ).pipe(map((emit) => emit.message)),
 
     // use the "complete sources" button to see the full behavior
     switchMap$: this.sources.sourceA$.pipe(
@@ -212,6 +227,8 @@ export class AppComponent {
       withLatestFrom(this.sources.sourceB$, this.sources.sourceC$),
       map(([a, b, c]) => `${a.message}, ${b.message}, ${c.message}`)
     ),
+
+    // partition, groupBy, scan, share
   } as const;
 
   getSources() {
@@ -221,8 +238,15 @@ export class AppComponent {
     }));
   }
 
-  getExamples() {
-    return Object.entries(this.examples).map(([key, value]) => ({
+  getCreationExamples() {
+    return Object.entries(this.creationExamples).map(([key, value]) => ({
+      name: key,
+      observable$: value,
+    }));
+  }
+
+  getPipeableExamples() {
+    return Object.entries(this.pipeableExamples).map(([key, value]) => ({
       name: key,
       observable$: value,
     }));

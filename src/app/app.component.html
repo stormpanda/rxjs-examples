@@ -12,10 +12,21 @@
     </button>
   </div>
 
-  <h2>Operators</h2>
+  <h2>Creation Operators</h2>
   <div class="buttons">
     <button
-      *ngFor="let example of getExamples()"
+      *ngFor="let example of getCreationExamples()"
+      (click)="subscribe(example.observable$)"
+      class="button"
+    >
+      {{ example.name }}
+    </button>
+  </div>
+
+  <h2>Pipeable Operators</h2>
+  <div class="buttons">
+    <button
+      *ngFor="let example of getPipeableExamples()"
       (click)="subscribe(example.observable$)"
       class="button"
     >
